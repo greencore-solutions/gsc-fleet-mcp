@@ -6,9 +6,10 @@
 // ============================================================
 
 export const HEADLINE = {
-  live_agents: 8097,
-  carriers_in_build: 2500,
+  live_agents: 10597,
+  carriers_in_build: 0,
   program_total: 10597,
+  sovereign_jurisdictions_resident: 9,
   agentic_inbound_signals_per_month: 9500000,
   human_visits_per_month: 1500000,
 };
@@ -49,18 +50,20 @@ export const FLEETS = {
   },
 };
 
-// Sovereign deployment map — resident today vs in build.
-// Only real things: status flips to "resident" per node as it ships.
+// Sovereign deployment map — ALL NINE RESIDENT (2026-07-20).
+// The five sovereign nodes shipped: 500 Carrier Cards live on each,
+// served from inside each jurisdiction's own Azure region. Nothing
+// is in build. Status is only ever set from what is actually on the wire.
 export const JURISDICTIONS = [
   { code: "FR", jurisdiction: "France", status: "resident", served_by: "https://gsc-cpg.ai", azure_region: "France Central", note: "Global fleet home" },
   { code: "AU", jurisdiction: "Australia", status: "resident", served_by: "https://gsc-a2a.ai", azure_region: "Australia East", note: "APAC fleet home" },
   { code: "US", jurisdiction: "United States", status: "resident", served_by: "https://gsc-a2a.io", azure_region: "South Central US", note: "LATAM fleet compute" },
   { code: "MX", jurisdiction: "Mexico", status: "resident", served_by: "https://gsc-a2a.io", azure_region: "Mexico Central", note: "LATAM fleet storage residency" },
-  { code: "UK", jurisdiction: "United Kingdom", status: "in_build", planned_endpoint: "https://uk.gsc-fleet.ai", azure_region: "UK South", rationale: "Global CPG headquarters market" },
-  { code: "CH", jurisdiction: "Switzerland", status: "in_build", planned_endpoint: "https://ch.gsc-fleet.ai", azure_region: "Switzerland North", rationale: "Global CPG headquarters market and data sovereignty" },
-  { code: "NL", jurisdiction: "Netherlands", status: "in_build", planned_endpoint: "https://nl.gsc-fleet.ai", azure_region: "West Europe", rationale: "Rotterdam — Europe's CPG goods flow" },
-  { code: "SG", jurisdiction: "Singapore", status: "in_build", planned_endpoint: "https://sg.gsc-fleet.ai", azure_region: "Southeast Asia", rationale: "APAC AI and finance capital" },
-  { code: "KR", jurisdiction: "South Korea", status: "in_build", planned_endpoint: "https://kr.gsc-fleet.ai", azure_region: "Korea Central", rationale: "Beauty & Personal Care innovation center" },
+  { code: "UK", jurisdiction: "United Kingdom", status: "resident", served_by: "https://uk.gsc-fleet.ai", azure_region: "UK South", rationale: "Global CPG headquarters market", carriers: 500 },
+  { code: "CH", jurisdiction: "Switzerland", status: "resident", served_by: "https://ch.gsc-fleet.ai", azure_region: "Switzerland North", rationale: "Global CPG headquarters market and data sovereignty", carriers: 500 },
+  { code: "NL", jurisdiction: "Netherlands", status: "resident", served_by: "https://nl.gsc-fleet.ai", azure_region: "West Europe", rationale: "Rotterdam — Europe's CPG goods flow", carriers: 500 },
+  { code: "SG", jurisdiction: "Singapore", status: "resident", served_by: "https://sg.gsc-fleet.ai", azure_region: "Southeast Asia", rationale: "APAC AI and finance capital", carriers: 500 },
+  { code: "KR", jurisdiction: "South Korea", status: "resident", served_by: "https://kr.gsc-fleet.ai", azure_region: "Korea Central", rationale: "Beauty & Personal Care innovation center", carriers: 500 },
 ];
 
 // SM-ECO-10060 region routing for members without a resident node yet
