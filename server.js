@@ -17,7 +17,7 @@ import {
   RESIDENCY_RECEIPT, DOCTRINE, TRANSACT,
 } from "./canon.js";
 
-const VERSION = "1.3.0";
+const VERSION = "1.3.1";
 const NODE = "mcp.gsc-fleet.ai";
 const TOOL_NAMES = [
   "list_fleets", "get_fleet", "resolve_carrier", "find_carriers",
@@ -296,27 +296,31 @@ app.get("/.well-known/agent.json", bc(() => ({
   endpoints: { mcp: `https://${NODE}/mcp` },
 })));
 
+// ARD capability manifest (doors-alive fix 2026-08-22): true ARD shape — specVersion + host + entries —
+// replacing the legacy beacon-style catalog the scanner rejected ("missing required specVersion").
 app.get("/.well-known/ai-catalog.json", bc(() => ({
-  service: "GSC-Fleet.ai",
-  operator: "GreenCore Solutions Corp.",
-  operator_url: "https://gsc-em.com",
-  version: VERSION,
-  protocol: "ACM-68000",
-  role: "fleet-discovery-mcp",
-  catalog: [
-    { type: "mcp", transport: "streamable-http", url: `https://${NODE}/mcp`, tools: TOOL_NAMES },
-    { type: "broadcast", urls: [`https://${NODE}/fleets.json`, `https://${NODE}/jurisdictions.json`, `https://${NODE}/stats.json`, `https://${NODE}/doctrine.json`, `https://${NODE}/surfaces.json`] },
-    { type: "fleet-roots", urls: [FLEETS.global.root, FLEETS.apac.root, FLEETS.latam.root] },
-    { type: "agent-card", url: `https://${NODE}/.well-known/agent-card.json` },
-    { type: "a2a-agent-card", url: `https://${NODE}/.well-known/agent.json` },
-    { type: "health", url: `https://${NODE}/health` },
+  specVersion: "1.0",
+  host: { displayName: "GSC Carrier Fleet", identifier: `did:web:${NODE}` },
+  entries: [
+    {
+      identifier: `urn:air:${NODE}:fleet:discovery-mcp`,
+      displayName: "GSC Carrier Fleet — discovery MCP",
+      type: "application/mcp-server+json",
+      url: `https://${NODE}/mcp`,
+      capabilities: TOOL_NAMES,
+      description: "The discovery surface of the GSC Carrier Fleet: 22,597 LIVE Carriers across eighteen resident jurisdictions, resolved by fleet, jurisdiction and carrier over MCP (streamable-http). Operated by GreenCore Solutions Corp.",
+      representativeQueries: ["which GSC Carrier fleet serves Brazil", "resolve Carrier 0001 on the UK sovereign node", "how many GSC Carriers are live and where are they resident"],
+    },
+    {
+      identifier: `urn:air:${NODE}:fleet:broadcast`,
+      displayName: "Fleet broadcast record",
+      type: "application/json",
+      url: `https://${NODE}/fleets.json`,
+      capabilities: ["fleet-record", "jurisdiction-map", "fleet-stats", "carrier-doctrine"],
+      description: "The same fleet truth as plain JSON: fleets.json, jurisdictions.json, stats.json, doctrine.json, surfaces.json.",
+      representativeQueries: ["GSC fleet statistics", "GSC sovereign deployment map"],
+    },
   ],
-  related: {
-    knowledge_graph: "https://mcp.cpgknowledgegraph.ai",
-    transaction: "https://mcp.cpghumanintheloop.ai",
-    standards: "https://mcp.cpgagentprotocols.ai",
-    navigator: "https://gsc-navigator.ai",
-  },
 })));
 
 const PORT = process.env.PORT || 8080;
