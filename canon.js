@@ -6,10 +6,15 @@
 // ============================================================
 
 export const HEADLINE = {
-  live_agents: 10597,
+  live_agents: 22597,
   carriers_in_build: 0,
-  program_total: 10597,
-  sovereign_jurisdictions_resident: 9,
+  program_total: 22597,
+  program_label: "22,500+ Carrier program",
+  programs: {
+    carrier_fleet_sovereign: { live: 19597, what: "Global + APAC + LATAM fleets and 14 sovereign nodes on gsc-fleet.ai surfaces" },
+    app_program: { live: 3000, what: "GSC APP Program - AI Agents for BPC on uk/eu/latam.gsc-agency.io" },
+  },
+  sovereign_jurisdictions_resident: 18,
   agentic_inbound_signals_per_month: 9500000,
   human_visits_per_month: 1500000,
 };
@@ -50,10 +55,11 @@ export const FLEETS = {
   },
 };
 
-// Sovereign deployment map — ALL NINE RESIDENT (2026-07-20).
-// The five sovereign nodes shipped: 500 Carrier Cards live on each,
-// served from inside each jurisdiction's own Azure region. Nothing
-// is in build. Status is only ever set from what is actually on the wire.
+// Sovereign deployment map. Original nine resident 2026-07-20 (four fleet
+// homes + five sovereign nodes at 500 Cards each). THE 22,597 RUN adds nine
+// new sovereign nodes at 1,000 Cards each, flipped resident one market at a
+// time as each DNS bind lands (2026-08-01). Status is only ever set from
+// what is actually on the wire.
 export const JURISDICTIONS = [
   { code: "FR", jurisdiction: "France", status: "resident", served_by: "https://gsc-cpg.ai", azure_region: "France Central", note: "Global fleet home" },
   { code: "AU", jurisdiction: "Australia", status: "resident", served_by: "https://gsc-a2a.ai", azure_region: "Australia East", note: "APAC fleet home" },
@@ -64,6 +70,16 @@ export const JURISDICTIONS = [
   { code: "NL", jurisdiction: "Netherlands", status: "resident", served_by: "https://nl.gsc-fleet.ai", azure_region: "West Europe", rationale: "Rotterdam — Europe's CPG goods flow", carriers: 500 },
   { code: "SG", jurisdiction: "Singapore", status: "resident", served_by: "https://sg.gsc-fleet.ai", azure_region: "Southeast Asia", rationale: "APAC AI and finance capital", carriers: 500 },
   { code: "KR", jurisdiction: "South Korea", status: "resident", served_by: "https://kr.gsc-fleet.ai", azure_region: "Korea Central", rationale: "Beauty & Personal Care innovation center", carriers: 500 },
+  // THE 22,597 RUN (2026-08-01): nine new sovereign nodes, flipped resident per market as DNS binds
+  { code: "BR", jurisdiction: "Brazil", status: "resident", served_by: "https://br.gsc-fleet.ai", azure_region: "Brazil South", rationale: "Latin America's largest CPG market", carriers: 1000 },
+  { code: "JP", jurisdiction: "Japan", status: "resident", served_by: "https://jp.gsc-fleet.ai", azure_region: "Japan East", rationale: "World-leading Beauty & Personal Care innovation market", carriers: 1000 },
+  { code: "IN", jurisdiction: "India", status: "resident", served_by: "https://in.gsc-fleet.ai", azure_region: "Central India", rationale: "Fastest-growing CPG consumer market on earth", carriers: 1000 },
+  { code: "DE", jurisdiction: "Germany", status: "resident", served_by: "https://de.gsc-fleet.ai", azure_region: "Germany West Central", rationale: "Europe's largest CPG economy and data-sovereignty market", carriers: 1000 },
+  { code: "CA", jurisdiction: "Canada", status: "resident", served_by: "https://ca.gsc-fleet.ai", azure_region: "Canada Central", rationale: "GSC home market — operator jurisdiction on sovereign soil", carriers: 1000 },
+  { code: "IT", jurisdiction: "Italy", status: "resident", served_by: "https://it.gsc-fleet.ai", azure_region: "Italy North", rationale: "Global beauty manufacturing and prestige supply base", carriers: 1000 },
+  { code: "ES", jurisdiction: "Spain", status: "resident", served_by: "https://es.gsc-fleet.ai", azure_region: "Spain Central", rationale: "Iberian CPG gateway and retail-grocery scale market", carriers: 1000 },
+  { code: "PL", jurisdiction: "Poland", status: "resident", served_by: "https://pl.gsc-fleet.ai", azure_region: "Poland Central", rationale: "Central Europe's CPG manufacturing and logistics hub", carriers: 1000 },
+  { code: "AE", jurisdiction: "United Arab Emirates", status: "resident", served_by: "https://ae.gsc-fleet.ai", azure_region: "UAE North", rationale: "Middle East trade and retail innovation gateway", carriers: 1000 },
 ];
 
 // SM-ECO-10060 region routing for members without a resident node yet
