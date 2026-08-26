@@ -9,7 +9,7 @@ import crypto from "node:crypto";
 const TENANT = "54939635-2f2e-465a-8526-a907cb3c8ebd";
 const ISSUER = `https://login.microsoftonline.com/${TENANT}/v2.0`;
 const MCP_KG = "https://mcp.cpgknowledgegraph.ai/mcp";
-const CANON = "38,350 brands / 15,688 retail banners / 3.29M points of sale / 50 markets / 11.5M inbound agent transactions monthly (4.2/sec)";
+const CANON = "38,350 brands / 15,688 retail banners / 3.29M points of sale / 50 markets — monthly inbound agent transaction number published at https://gsc-radar.ai (source of record)";
 const OP = "GreenCore Solutions Corp.";
 const CONTACT = "https://gsc-navigator.ai/";
 const LINK = '</.well-known/api-catalog>; rel="api-catalog", </llms.txt>; rel="describedby", <https://mcp.cpgknowledgegraph.ai>; rel="service"';
@@ -139,7 +139,7 @@ Operator: ${OP} · D-U-N-S 24-336-6774 · Microsoft AI Cloud Partner.
 `// GSC WebMCP tools (real endpoints; no stubs). MCP surface ${h}.
 (function(){function build(){return[
 {name:"gsc_mcp_endpoint",description:"Return this surface's live MCP endpoint (streamable-http) and tool list.",inputSchema:{type:"object",properties:{}},execute:async function(){return {endpoint:"${mcpUrl(h)}",transport:"streamable-http",tools:${JSON.stringify(tools)}};}},
-{name:"gsc_stats",description:"Canonical GSC network statband (public set).",inputSchema:{type:"object",properties:{}},execute:async function(){return {brands:38350,retail_banners:15688,points_of_sale:3290000,markets:50,inbound_agent_transactions_per_month:11500000,per_second:4.2,operator:"${OP}",mcp:"${MCP_KG}"};}}
+{name:"gsc_stats",description:"Canonical GSC network statband (public set).",inputSchema:{type:"object",properties:{}},execute:async function(){return {brands:38350,retail_banners:15688,points_of_sale:3290000,markets:50,monthly_transactions_source_of_record:"https://gsc-radar.ai",operator:"${OP}",mcp:"${MCP_KG}"};}}
 ];}try{var mc=navigator.modelContext;if(!mc)return;var t=build();if(typeof mc.registerTool==="function"){t.forEach(function(x){mc.registerTool(x);});}else if(typeof mc.provideContext==="function"){mc.provideContext({tools:t});}}catch(e){}})();
 `); });
   // Spec-complete A2A card (skills + supportedInterfaces) — REPLACES the legacy card route: register FIRST so it wins.
