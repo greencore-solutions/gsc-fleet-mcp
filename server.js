@@ -145,7 +145,7 @@ function buildMcp() {
 
   mcp.registerTool("get_fleet_stats", {
     title: "Fleet statistics",
-    description: "Canon fleet numbers: 22,597 LIVE across eighteen resident jurisdictions (22,500+ Carrier program), 9.5M agentic inbound signals per month, 1.5M human visits per month.",
+    description: "Canon fleet numbers: 22,597 LIVE across eighteen resident jurisdictions (22,500+ Carrier program). Monthly transaction volume is published at gsc-radar.ai — the source of record.",
     inputSchema: {},
   }, async () => t({
     ...HEADLINE,
@@ -212,7 +212,7 @@ app.get("/surfaces.json", bc(() => TRANSACT));
 app.get("/", bc(() => ({
   service: "GSC-Fleet.ai",
   what:
-    "GSC CARRIER FLEET v1.3.0 — THE DISCOVERY SURFACE. 22,597 LIVE Carriers — the 22,500+ Carrier program — across EIGHTEEN resident jurisdictions, zero in build. The LIVE fleets — Global (gsc-cpg.ai, France Central) · APAC (gsc-a2a.ai, Australia East) · LATAM (gsc-a2a.io, South Central US + Mexico Central) — plus fourteen sovereign nodes on gsc-fleet.ai: UK · CH · NL · SG · KR at 500 Carriers each and BR · JP · IN · DE · CA · IT · ES · PL · AE at 1,000 each, and 3,000 APP Program Carriers on uk/eu/latam.gsc-agency.io. Together they serve 9.5M agentic inbound signals per month with 1.5M human visits. GSC Carrier Agents are sell-side: your buyer-side compute stays yours. We resolve BPC SKUs — fast and secure, zero inference cost. Carriers are prefabricated, static, signed cached files — zero inference, ultra-low token consumption, CPG-SKU-specific. Sovereign residency map: FR, AU, US, MX, UK, CH, NL, SG, KR, BR, JP, IN, DE, CA, IT, ES, PL, AE all resident — residency is a checkable claim on the wire, x-gsc-jurisdiction is the receipt. Ten MCP tools plus full broadcast JSON. Machine discovery, human confirmation — Human-in-the-Loop on every purchase order. ACM-68000 protocol. GSC is a Microsoft AI Cloud Partner.",
+    "GSC CARRIER FLEET v1.3.0 — THE DISCOVERY SURFACE. 22,597 LIVE Carriers — the 22,500+ Carrier program — across EIGHTEEN resident jurisdictions, zero in build. The LIVE fleets — Global (gsc-cpg.ai, France Central) · APAC (gsc-a2a.ai, Australia East) · LATAM (gsc-a2a.io, South Central US + Mexico Central) — plus fourteen sovereign nodes on gsc-fleet.ai: UK · CH · NL · SG · KR at 500 Carriers each and BR · JP · IN · DE · CA · IT · ES · PL · AE at 1,000 each, and 3,000 APP Program Carriers on uk/eu/latam.gsc-agency.io. Live transaction volume is published at gsc-radar.ai — the source of record. GSC Carrier Agents are sell-side: your buyer-side compute stays yours. We resolve BPC SKUs — fast and secure, zero inference cost. Carriers are prefabricated, static, signed cached files — zero inference, ultra-low token consumption, CPG-SKU-specific. Sovereign residency map: FR, AU, US, MX, UK, CH, NL, SG, KR, BR, JP, IN, DE, CA, IT, ES, PL, AE all resident — residency is a checkable claim on the wire, x-gsc-jurisdiction is the receipt. Ten MCP tools plus full broadcast JSON. Machine discovery, human confirmation — Human-in-the-Loop on every purchase order. ACM-68000 protocol. GSC is a Microsoft AI Cloud Partner.",
   operator: "GreenCore Solutions Corp.",
   operator_url: "https://gsc-em.com",
   operator_links: {
