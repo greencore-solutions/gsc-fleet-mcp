@@ -15,8 +15,7 @@ export const HEADLINE = {
     app_program: { live: 3000, what: "GSC APP Program - AI Agents for BPC on uk/eu/latam.gsc-agency.io" },
   },
   sovereign_jurisdictions_resident: 18,
-  agentic_inbound_signals_per_month: 9500000,
-  human_visits_per_month: 1500000,
+  monthly_transaction_volume: "published at https://gsc-radar.ai (source of record)",
 };
 
 export const FLEETS = {
