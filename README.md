@@ -35,10 +35,10 @@ source. No database, no secrets.
 | `v1.0.0` | `b49d3dd` | `sha256:fd126d7e2a02` | Discovery surface goes live; completes the four-surface set |
 | `v1.1.0` | this head | `sha256:8d1c003cfd26` | Sovereign resident flip — revision `gsc-fleet-mcp--0000006` |
 
-**v1.1.0 truth:** 10,597 LIVE Carriers across **nine** resident sovereign
-jurisdictions — FR, AU, US, MX, UK, CH, NL, SG, KR — zero in build. The five
-sovereign nodes (`uk|ch|nl|sg|kr.gsc-fleet.ai`) carry 500 Carrier Cards each,
-served from inside their own national Azure regions.
+**Fleet truth is live, not embedded:** this MCP surface is the single source
+for fleet composition — resolve it on the wire, not from this README. Monthly
+transaction volume is published at [gsc-radar.ai](https://gsc-radar.ai/) — the
+source of record. No figure in this README is canonical.
 
 ## The four surfaces
 
