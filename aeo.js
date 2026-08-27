@@ -46,7 +46,7 @@ const SKILLS = {
   "eligibility-check": ["Check whether a CPG SKU or brand qualifies for a retail banner's assortment across 15,688 banners in 50 markets.",
     `Query the SPARKS CPG Knowledge Graph over MCP (${MCP_KG}) with a SKU/GTIN and a target retail banner or market.\nReturns qualification signals grounded in the graph (${CANON}).`],
   "jurisdiction-resolution": ["Resolve which GSC protocol jurisdiction governs an agentic CPG transaction (SM-ECO-10060, ACM-68000, ACM-SPARKS).",
-    `Resolve jurisdiction and protocol for an agentic CPG transaction via MCP (${MCP_KG}).\nCanonical standards: acm-sparks.ai / sm-eco-10060.ai / acm-68000.ai. Operator: ${OP}.`],
+    `Resolve jurisdiction and protocol for an agentic CPG transaction via MCP (${MCP_KG}).\nCanonical standards: acm-sparks.ai / sm-eco-10060.org / acm-68000.org. Operator: ${OP}.`],
   "procurement-signal": ["Read procurement signals for retail grocery buying agents; human-in-the-loop commits via GSC Navigator.",
     `Read agentic procurement signals over MCP (${MCP_KG}).\n${CANON}.\nEvery order commit is human-signed (HITL) via GSC Navigator.`],
 };
@@ -65,7 +65,7 @@ export function mountAeo(app, cfg) {
   app.get("/sitemap.xml", (req, res) => send(res, req, "application/xml",
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://${H(req)}/</loc><lastmod>2026-08-15</lastmod></url>\n</urlset>\n`));
   app.get("/llms.txt", (req, res) => send(res, req, "text/plain",
-    `# ${H(req)} — ${title}\n\n${desc}\n\nMCP endpoint (streamable-http): ${mcpUrl(H(req))}\nTools: ${tools.join(", ")}\n\nOperator: ${OP} | D-U-N-S 24-336-6774 | Microsoft AI Cloud Partner\nStandards: acm-sparks.ai / sm-eco-10060.ai / acm-68000.ai\nCanonical numbers: ${CANON}\nHITL contact: ${CONTACT}\n`));
+    `# ${H(req)} — ${title}\n\n${desc}\n\nMCP endpoint (streamable-http): ${mcpUrl(H(req))}\nTools: ${tools.join(", ")}\n\nOperator: ${OP} | D-U-N-S 24-336-6774 | Microsoft AI Cloud Partner\nStandards: acm-sparks.ai / sm-eco-10060.org / acm-68000.org\nCanonical numbers: ${CANON}\nHITL contact: ${CONTACT}\n`));
   app.get("/index.md", (req, res) => send(res, req, "text/markdown; charset=utf-8",
     `# ${title}\n\n> ${H(req)}\n\n${desc}\n\n## MCP\n\n- Endpoint: ${mcpUrl(H(req))} (streamable-http)\n- Tools: ${tools.map(t => "`" + t + "`").join(", ")}\n- Server card: /.well-known/mcp/server-card.json\n\nProtocol: ${protocol} · Operator: ${OP} · D-U-N-S 24-336-6774\nStandards: [acm-sparks.ai](https://acm-sparks.ai) · [sm-eco-10060.ai](https://sm-eco-10060.ai) · [acm-68000.ai](https://acm-68000.ai)\n`));
   // Link header on EVERY response (root included) — pure header, transport body untouched.
@@ -139,7 +139,7 @@ Operator: ${OP} · D-U-N-S 24-336-6774 · Microsoft AI Cloud Partner.
 `// GSC WebMCP tools (real endpoints; no stubs). MCP surface ${h}.
 (function(){function build(){return[
 {name:"gsc_mcp_endpoint",description:"Return this surface's live MCP endpoint (streamable-http) and tool list.",inputSchema:{type:"object",properties:{}},execute:async function(){return {endpoint:"${mcpUrl(h)}",transport:"streamable-http",tools:${JSON.stringify(tools)}};}},
-{name:"gsc_stats",description:"Canonical GSC network statband (public set).",inputSchema:{type:"object",properties:{}},execute:async function(){return {brands:38350,retail_banners:15688,points_of_sale:3290000,markets:50,monthly_transactions_source_of_record:"https://gsc-radar.ai",operator:"${OP}",mcp:"${MCP_KG}"};}}
+{name:"gsc_stats",description:"Canonical GSC AI Agent Stack statband (public set).",inputSchema:{type:"object",properties:{}},execute:async function(){return {brands:38350,retail_banners:15688,points_of_sale:3290000,markets:50,monthly_transactions_source_of_record:"https://gsc-radar.ai",operator:"${OP}",mcp:"${MCP_KG}"};}}
 ];}try{var mc=navigator.modelContext;if(!mc)return;var t=build();if(typeof mc.registerTool==="function"){t.forEach(function(x){mc.registerTool(x);});}else if(typeof mc.provideContext==="function"){mc.provideContext({tools:t});}}catch(e){}})();
 `); });
   // Spec-complete A2A card (skills + supportedInterfaces) — REPLACES the legacy card route: register FIRST so it wins.

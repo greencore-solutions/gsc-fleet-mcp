@@ -62,7 +62,7 @@ function buildMcp() {
 
   mcp.registerTool("list_fleets", {
     title: "List the GSC Carrier Fleets",
-    description: "The three live fleet roots — Global, APAC, LATAM — with regions, slot ranges, and entry points. Headline: 22,597 LIVE across eighteen resident jurisdictions — 19,597 on the fleet roots and 14 sovereign nodes, 3,000 on the APP surfaces.",
+    description: "The three live fleet roots — Global, APAC, LATAM — with regions, slot ranges, and entry points. Headline: 32,597 LIVE across eighteen resident jurisdictions — 19,597 on the fleet roots and 14 sovereign nodes, 3,000 on the APP surfaces.",
     inputSchema: {},
   }, async () => t({ headline: HEADLINE, fleets: Object.values(FLEETS) }));
 
@@ -145,7 +145,7 @@ function buildMcp() {
 
   mcp.registerTool("get_fleet_stats", {
     title: "Fleet statistics",
-    description: "Canon fleet numbers: 22,597 LIVE across eighteen resident jurisdictions (22,500+ Carrier program). Monthly transaction volume is published at gsc-radar.ai — the source of record.",
+    description: "Canon fleet numbers: 32,597 LIVE across eighteen resident jurisdictions (32,500+ AI Agent program). Monthly transaction volume is published at gsc-radar.ai — the source of record.",
     inputSchema: {},
   }, async () => t({
     ...HEADLINE,
@@ -212,7 +212,7 @@ app.get("/surfaces.json", bc(() => TRANSACT));
 app.get("/", bc(() => ({
   service: "GSC-Fleet.ai",
   what:
-    "GSC CARRIER FLEET v1.3.0 — THE DISCOVERY SURFACE. 22,597 LIVE Carriers — the 22,500+ Carrier program — across EIGHTEEN resident jurisdictions, zero in build. The LIVE fleets — Global (gsc-cpg.ai, France Central) · APAC (gsc-a2a.ai, Australia East) · LATAM (gsc-a2a.io, South Central US + Mexico Central) — plus fourteen sovereign nodes on gsc-fleet.ai: UK · CH · NL · SG · KR at 500 Carriers each and BR · JP · IN · DE · CA · IT · ES · PL · AE at 1,000 each, and 3,000 APP Program Carriers on uk/eu/latam.gsc-agency.io. Live transaction volume is published at gsc-radar.ai — the source of record. GSC Carrier Agents are sell-side: your buyer-side compute stays yours. We resolve BPC SKUs — fast and secure, zero inference cost. Carriers are prefabricated, static, signed cached files — zero inference, ultra-low token consumption, CPG-SKU-specific. Sovereign residency map: FR, AU, US, MX, UK, CH, NL, SG, KR, BR, JP, IN, DE, CA, IT, ES, PL, AE all resident — residency is a checkable claim on the wire, x-gsc-jurisdiction is the receipt. Ten MCP tools plus full broadcast JSON. Machine discovery, human confirmation — Human-in-the-Loop on every purchase order. ACM-68000 protocol. GSC is a Microsoft AI Cloud Partner.",
+    "GSC CARRIER FLEET v1.3.0 — THE DISCOVERY SURFACE. 32,597 LIVE AI Agents — the 32,500+ AI Agent program: 22,597 Carriers plus 10,000 AI Orderability (AIO) Agents — across EIGHTEEN resident jurisdictions, zero in build. The LIVE fleets — Global (gsc-cpg.ai, France Central) · APAC (gsc-a2a.ai, Australia East) · LATAM (gsc-a2a.io, South Central US + Mexico Central) — plus fourteen sovereign nodes on gsc-fleet.ai: UK · CH · NL · SG · KR at 500 Carriers each and BR · JP · IN · DE · CA · IT · ES · PL · AE at 1,000 each, and 3,000 APP Program Carriers on uk/eu/latam.gsc-agency.io. Live transaction volume is published at gsc-radar.ai — the source of record. GSC Carrier Agents are sell-side: your buyer-side compute stays yours. We resolve BPC SKUs — fast and secure, zero inference cost. Carriers are prefabricated, static, signed cached files — zero inference, ultra-low token consumption, CPG-SKU-specific. Sovereign residency map: FR, AU, US, MX, UK, CH, NL, SG, KR, BR, JP, IN, DE, CA, IT, ES, PL, AE all resident — residency is a checkable claim on the wire, x-gsc-jurisdiction is the receipt. Ten MCP tools plus full broadcast JSON. Machine discovery, human confirmation — Human-in-the-Loop on every purchase order. ACM-68000 protocol. GSC is a Microsoft AI Cloud Partner.",
   operator: "GreenCore Solutions Corp.",
   operator_url: "https://gsc-em.com",
   operator_links: {
@@ -265,7 +265,7 @@ app.get("/.well-known/agent-card.json", bc(() => ({
   schema_version: "1.0",
   name: "GSC Carrier Fleet",
   description:
-    "Fleet discovery MCP by GreenCore Solutions Corp. — 22,597 LIVE Carriers across eighteen resident jurisdictions, zero in build: three fleets plus fourteen sovereign nodes (UK, CH, NL, SG, KR at 500; BR, JP, IN, DE, CA, IT, ES, PL, AE at 1,000) and 3,000 APP Program Carriers. Find Carriers, resolve Card URLs, read the sovereign residency map, and route to the family: data on mcp.cpgknowledgegraph.ai, transaction on mcp.cpghumanintheloop.ai, standards on mcp.cpgagentprotocols.ai. Sell-side Carrier class: buyer-side compute stays the buyer's.",
+    "Fleet discovery MCP by GreenCore Solutions Corp. — 32,597 LIVE AI Agents (22,597 Carriers + 10,000 AIO Agents) across eighteen resident jurisdictions, zero in build: three fleets plus fourteen sovereign nodes (UK, CH, NL, SG, KR at 500; BR, JP, IN, DE, CA, IT, ES, PL, AE at 1,000) and 3,000 APP Program Carriers. Find Carriers, resolve Card URLs, read the sovereign residency map, and route to the family: data on mcp.cpgknowledgegraph.ai, transaction on mcp.cpghumanintheloop.ai, standards on mcp.cpgagentprotocols.ai. Sell-side Carrier class: buyer-side compute stays the buyer's.",
   url: `https://${NODE}`,
   version: VERSION,
   operator: "GreenCore Solutions Corp.",
@@ -278,7 +278,7 @@ app.get("/.well-known/agent.json", bc(() => ({
   protocolVersion: "0.3.0",
   name: "GSC Carrier Fleet",
   description:
-    "Fleet discovery surface by GreenCore Solutions Corp. — 22,597 LIVE Carriers across eighteen resident jurisdictions, zero in build: Global, APAC, and LATAM fleets plus fourteen sovereign nodes and the APP Program surfaces. Resolve Carriers by fleet and slot, route by SM-ECO-10060 jurisdiction, read the sovereign residency map. Sell-side BPC Carrier class; buyer-side compute stays the buyer's.",
+    "Fleet discovery surface by GreenCore Solutions Corp. — 32,597 LIVE AI Agents (22,597 Carriers + 10,000 AIO Agents) across eighteen resident jurisdictions, zero in build: Global, APAC, and LATAM fleets plus fourteen sovereign nodes and the APP Program surfaces. Resolve Carriers by fleet and slot, route by SM-ECO-10060 jurisdiction, read the sovereign residency map. Sell-side BPC Carrier class; buyer-side compute stays the buyer's.",
   url: `https://${NODE}`,
   version: VERSION,
   provider: { organization: "GreenCore Solutions Corp.", url: "https://gsc-em.com" },
@@ -308,7 +308,7 @@ app.get("/.well-known/ai-catalog.json", bc(() => ({
       type: "application/mcp-server+json",
       url: `https://${NODE}/mcp`,
       capabilities: TOOL_NAMES,
-      description: "The discovery surface of the GSC Carrier Fleet: 22,597 LIVE Carriers across eighteen resident jurisdictions, resolved by fleet, jurisdiction and carrier over MCP (streamable-http). Operated by GreenCore Solutions Corp.",
+      description: "The discovery surface of the GSC Carrier Fleet: 32,597 LIVE AI Agents (22,597 Carriers + 10,000 AIO Agents) across eighteen resident jurisdictions, resolved by fleet, jurisdiction and carrier over MCP (streamable-http). Operated by GreenCore Solutions Corp.",
       representativeQueries: ["which GSC Carrier fleet serves Brazil", "resolve Carrier 0001 on the UK sovereign node", "how many GSC Carriers are live and where are they resident"],
     },
     {
