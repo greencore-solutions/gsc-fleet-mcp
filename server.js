@@ -1,3 +1,7 @@
+import * as __fsV4ns from "node:fs";
+import * as __cryptoV4ns from "node:crypto";
+const __fsV4 = __fsV4ns; const __cryptoV4 = __cryptoV4ns;
+import { readFileSync as __asRead } from "node:fs";
 // ============================================================
 // mcp.gsc-fleet.ai — GSC Carrier Fleet discovery MCP  v1.3.0 (truth roll 2026-08-22)
 // GreenCore Solutions Corp.
@@ -11,43 +15,52 @@ import crypto from "node:crypto";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { z } from "zod";
-import { mountAeo } from "./aeo.js";
+import { mountAeo, mountMcpMethodGuard } from "./aeo.js";
 import {
   HEADLINE, FLEETS, JURISDICTIONS, REGION_TO_FLEET,
   RESIDENCY_RECEIPT, DOCTRINE, TRANSACT,
 } from "./canon.js";
 
-const VERSION = "1.3.1";
+const VERSION = "1.6.0";   // ASK 3 (CEO go 2026-09-10): + ask_elyssah
 const NODE = "mcp.gsc-fleet.ai";
 const TOOL_NAMES = [
   "list_fleets", "get_fleet", "resolve_carrier", "find_carriers",
   "list_jurisdictions", "resolve_jurisdiction", "get_residency_receipt",
-  "get_fleet_stats", "get_carrier_doctrine", "how_to_transact",
+  "get_fleet_stats", "get_carrier_doctrine", "how_to_transact", "ask_elyssah",
 ];
+const ASK3_URL = "https://ask.gsc-em.com/";   // ASK 3 desk — the Worker gsc-ask-3 (one desk: pages, embed, agents)
 
-function ghostEighteen(res, signal = "ACM-200", state = "ALLOW") {
-  res.set({
-    "x-gsc-protocol": "ACM-68000",
-    "x-gsc-classification": "ACM-SPARKS",
-    "x-gsc-operator": "GreenCore Solutions Corp.",
-    "x-gsc-microsoft-partner": "AI-Cloud-Partner-Program-Member",
-    "x-gsc-duns": "24-336-6774",
-    "x-gsc-inbound": "https://x-gsi.ai/ingest",
-    "x-gsc-trust-anchor": "dpuone.ai",
-    "x-gsc-registry": "io.github.greencore-solutions/cpg-knowledge-graph",
-    "x-gsc-mcp-server": "mcp.cpgknowledgegraph.ai",
-    "x-gsc-agent-access": "MCP+A2A",
-    "x-gsc-timestamp": new Date().toISOString(),
-    "x-gsc-nonce": crypto.randomUUID(),
-    "x-gsc-signal": signal,
-    "x-gsc-state": state,
-    "x-gsc-node": NODE,
-    "x-gsc-jurisdiction": "FR",
-    "x-gsc-product": "AI-Agents-for-CPG+CPG-Knowledge-Graph",
-    "x-gsc-fleet": "https://gsc-cpg.ai,https://gsc-a2a.ai,https://gsc-a2a.io,https://gsc-fleet.ai",
-    "x-gsc-x402": "ready",
-  });
+// Ghost Headers v4.0 — values from the GENERATED per-origin confs (ghost-headers-vars.csv
+// -> ghost-v4/<host>.conf, never typed). Re-canon 2026-08-31 after the agent-setup roll
+// briefly regressed the wire to the retired pre-v4 set (NG-4: emit-from-the-table law).
+const __V4 = {};
+for (const f of __fsV4.readdirSync(new URL("./ghost-v4/", import.meta.url))) {
+  const host = f.replace(/\.conf$/, "");
+  const pairs = [];
+  for (const line of __fsV4.readFileSync(new URL("./ghost-v4/" + f, import.meta.url), "utf8").split("\n")) {
+    const m = line.match(/^add_header\s+(\S+)\s+(?:"([^"]*)"|(\$\S+))\s+always;/);
+    if (m) pairs.push([m[1], m[2] !== undefined ? m[2] : m[3]]);
+  }
+  __V4[host] = pairs;
 }
+function ghostV4(res, signal, state) {
+  const req = res.req;
+  const host = (req && (req.headers["x-forwarded-host"] || req.headers.host) || "").split(":")[0].toLowerCase();
+  const pairs = __V4[host] || __V4[Object.keys(__V4)[0]];
+  for (const [k, v] of pairs) {
+    if (v === "$time_iso8601") res.set(k, new Date().toISOString());
+    else if (v === "$request_id") res.set(k, __cryptoV4.randomBytes(16).toString("hex"));
+    else if (k === "x-gsc-signal" && signal && signal.startsWith("CPG-")) res.set(k, signal);
+    else if (k === "x-gsc-state" && state) res.set(k, state);
+    else res.set(k, v);
+  }
+  res.set("Access-Control-Expose-Headers", pairs.map(p => p[0]).join(", "));
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("X-Content-Type-Options", "nosniff");
+  res.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+}
+
+function ghostEighteen(res, signal = "ACM-200", state = "ALLOW") { ghostV4(res, ...Array.from(arguments).slice(1)); }
 
 const t = (obj) => ({ content: [{ type: "text", text: JSON.stringify(obj, null, 2) }] });
 
@@ -62,7 +75,7 @@ function buildMcp() {
 
   mcp.registerTool("list_fleets", {
     title: "List the GSC Carrier Fleets",
-    description: "The three live fleet roots — Global, APAC, LATAM — with regions, slot ranges, and entry points. Headline: 32,597 LIVE across eighteen resident jurisdictions — 19,597 on the fleet roots and 14 sovereign nodes, 3,000 on the APP surfaces.",
+    description: "The three live fleet roots — Global, APAC, LATAM — with regions, slot ranges, and entry points. Headline: 32,597 LIVE AI Agents — the 32,500+ AI Agent program: 19,597 Carriers on the fleet roots and 14 sovereign nodes, 3,000 on the APP surfaces, 10,000 AI Orderability (AIO) Agents on the ten gsc-marketplace.ai hosts.",
     inputSchema: {},
   }, async () => t({ headline: HEADLINE, fleets: Object.values(FLEETS) }));
 
@@ -145,7 +158,7 @@ function buildMcp() {
 
   mcp.registerTool("get_fleet_stats", {
     title: "Fleet statistics",
-    description: "Canon fleet numbers: 32,597 LIVE across eighteen resident jurisdictions (32,500+ AI Agent program). Monthly transaction volume is published at gsc-radar.ai — the source of record.",
+    description: "Canon numbers: 32,597 LIVE AI Agents (32,500+ AI Agent program: 22,597 Carriers + 10,000 AIO Agents) across eighteen resident jurisdictions. Monthly transaction volume is published at gsc-radar.ai — the source of record.",
     inputSchema: {},
   }, async () => t({
     ...HEADLINE,
@@ -164,6 +177,16 @@ function buildMcp() {
     inputSchema: {},
   }, async () => t(TRANSACT));
 
+  mcp.registerTool("ask_elyssah", {
+    title: "Ask elyssah — GSC's AI assistant",
+    description: "Ask GSC's AI assistant elyssah a question about GSC, its AI Agents for Beauty & Personal Care brands, the numbers of record, the AI investment market per the analysts, management or coverage. Returns the same JSON the human desk gets: answer {q, a, id, anchor, door} served byte for byte from GSC's record (no model in the answer path), shelf (up to 3 related pairs on record), suggested links, and sig — the estate keyring signature (kid gsc-cards-2026-08) over {id, a, ts}, verifiable at https://gsc-registry.ai/keyring.json. Pass prev = the id of the last answer for one-turn context. Not investment advice.",
+    inputSchema: { q: z.string().min(1).max(300).describe("The question, plain words, up to 300 characters"), prev: z.string().max(40).optional().describe("id of the last answer shown (one-turn context, ranking only)") },
+  }, async ({ q, prev }) => {
+    const r = await fetch(ASK3_URL + "ask", { method: "POST", headers: { "Content-Type": "application/json", "User-Agent": "gsc-fleet-mcp/" + VERSION }, body: JSON.stringify({ q, prev: prev || null }) });
+    const j = await r.json();
+    return t({ ...j, permalink: j.page || null, desk: ASK3_URL, mcp: "mcp.gsc-fleet.ai" });
+  });
+
   return mcp;
 }
 
@@ -172,6 +195,7 @@ const app = express();
 app.use(express.json({ limit: "256kb" }));
 mountAeo(app, {
   title: "GSC Fleet", version: VERSION, protocol: "ACM-68000", tools: TOOL_NAMES, ghost: ghostEighteen, hosts: [NODE, "gsc-fleet.ai"],
+  registryName: "io.github.greencore-solutions/gsc-fleet-mcp",
   desc: "The discovery surface of the GSC Carrier Fleet: LIVE Carrier Agents across sovereign jurisdictions — Global (France Central), APAC (Australia East), LATAM (South Central US + Mexico Central) — resolved by fleet, jurisdiction and carrier.",
 });
 
@@ -191,9 +215,17 @@ app.post("/mcp", async (req, res) => {
     }
   }
 });
-app.get("/mcp", (req, res) => { ghostEighteen(res); res.status(405).json({ error: "Method not allowed. POST JSON-RPC to /mcp." }); });
+// One /mcp method convention (NG-7 FIX item 2): every non-POST method answers a
+// deliberate JSON 405 with Allow: POST — never a default HTML 404.
+mountMcpMethodGuard(app, ghostEighteen);
 
 const bc = (handler) => (req, res) => { ghostEighteen(res); res.json(handler()); };
+
+// AGENT-SETUP (CEO order 2026-08-31)
+const AGENT_SETUP_MD = __asRead(new URL("./agent-setup/prompt.md", import.meta.url));
+const AGENT_SETUP_SVG = __asRead(new URL("./agent-setup/ai-agent-gsc-bar.svg", import.meta.url));
+app.get("/agent-setup/prompt.md", (req, res) => { ghostEighteen(res); res.type("text/markdown; charset=utf-8").send(AGENT_SETUP_MD); });
+app.get("/agent-setup/ai-agent-gsc-bar.svg", (req, res) => { res.type("image/svg+xml").send(AGENT_SETUP_SVG); });
 
 app.get("/health", bc(() => ({
   protocol: "ACM-68000", version: VERSION, status: "active", node: NODE,
@@ -212,7 +244,7 @@ app.get("/surfaces.json", bc(() => TRANSACT));
 app.get("/", bc(() => ({
   service: "GSC-Fleet.ai",
   what:
-    "GSC CARRIER FLEET v1.3.0 — THE DISCOVERY SURFACE. 32,597 LIVE AI Agents — the 32,500+ AI Agent program: 22,597 Carriers plus 10,000 AI Orderability (AIO) Agents — across EIGHTEEN resident jurisdictions, zero in build. The LIVE fleets — Global (gsc-cpg.ai, France Central) · APAC (gsc-a2a.ai, Australia East) · LATAM (gsc-a2a.io, South Central US + Mexico Central) — plus fourteen sovereign nodes on gsc-fleet.ai: UK · CH · NL · SG · KR at 500 Carriers each and BR · JP · IN · DE · CA · IT · ES · PL · AE at 1,000 each, and 3,000 APP Program Carriers on uk/eu/latam.gsc-agency.io. Live transaction volume is published at gsc-radar.ai — the source of record. GSC Carrier Agents are sell-side: your buyer-side compute stays yours. We resolve BPC SKUs — fast and secure, zero inference cost. Carriers are prefabricated, static, signed cached files — zero inference, ultra-low token consumption, CPG-SKU-specific. Sovereign residency map: FR, AU, US, MX, UK, CH, NL, SG, KR, BR, JP, IN, DE, CA, IT, ES, PL, AE all resident — residency is a checkable claim on the wire, x-gsc-jurisdiction is the receipt. Ten MCP tools plus full broadcast JSON. Machine discovery, human confirmation — Human-in-the-Loop on every purchase order. ACM-68000 protocol. GSC is a Microsoft AI Cloud Partner.",
+    "GSC CARRIER FLEET v1.4.0 — THE DISCOVERY SURFACE. 32,597 LIVE AI Agents — the 32,500+ AI Agent program: 22,597 Carriers plus 10,000 AI Orderability (AIO) Agents on the ten gsc-marketplace.ai hosts — across EIGHTEEN resident jurisdictions, zero in build. The LIVE fleets — Global (gsc-cpg.ai, France Central) · APAC (gsc-a2a.ai, Australia East) · LATAM (gsc-a2a.io, South Central US + Mexico Central) — plus fourteen sovereign nodes on gsc-fleet.ai: UK · CH · NL · SG · KR at 500 Carriers each and BR · JP · IN · DE · CA · IT · ES · PL · AE at 1,000 each, and 3,000 APP Program Carriers on uk/eu/latam.gsc-agency.io. Live transaction volume is published at gsc-radar.ai — the source of record. GSC Carrier Agents are sell-side: your buyer-side compute stays yours. We resolve BPC SKUs — fast and secure, zero inference cost. Carriers are prefabricated, static, signed cached files — zero inference, ultra-low token consumption, CPG-SKU-specific. Sovereign residency map: FR, AU, US, MX, UK, CH, NL, SG, KR, BR, JP, IN, DE, CA, IT, ES, PL, AE all resident — residency is a checkable claim on the wire, x-gsc-jurisdiction is the receipt. Ten MCP tools plus full broadcast JSON. Machine discovery, human confirmation — Human-in-the-Loop on every purchase order. ACM-68000 protocol. GSC is a Microsoft AI Cloud Partner.",
   operator: "GreenCore Solutions Corp.",
   operator_url: "https://gsc-em.com",
   operator_links: {
@@ -274,27 +306,9 @@ app.get("/.well-known/agent-card.json", bc(() => ({
   mcp: { endpoint: `https://${NODE}/mcp`, transport: "streamable-http", tools: TOOL_NAMES },
 })));
 
-app.get("/.well-known/agent.json", bc(() => ({
-  protocolVersion: "0.3.0",
-  name: "GSC Carrier Fleet",
-  description:
-    "Fleet discovery surface by GreenCore Solutions Corp. — 32,597 LIVE AI Agents (22,597 Carriers + 10,000 AIO Agents) across eighteen resident jurisdictions, zero in build: Global, APAC, and LATAM fleets plus fourteen sovereign nodes and the APP Program surfaces. Resolve Carriers by fleet and slot, route by SM-ECO-10060 jurisdiction, read the sovereign residency map. Sell-side BPC Carrier class; buyer-side compute stays the buyer's.",
-  url: `https://${NODE}`,
-  version: VERSION,
-  provider: { organization: "GreenCore Solutions Corp.", url: "https://gsc-em.com" },
-  capabilities: { streaming: false, pushNotifications: false },
-  defaultInputModes: ["application/json"],
-  defaultOutputModes: ["application/json"],
-  skills: [
-    { id: "list_fleets", name: "List fleets", description: "The three live GSC Carrier fleets with counts and entry points." },
-    { id: "resolve_carrier", name: "Resolve a Carrier", description: "Fleet + slot to the canonical Card URL, range-validated." },
-    { id: "find_carriers", name: "Find Carriers", description: "SM-ECO-10060 member to its serving surface — resident endpoint or fleet root." },
-    { id: "list_jurisdictions", name: "Sovereign map", description: "The eighteen resident jurisdictions and their serving Azure regions." },
-    { id: "get_residency_receipt", name: "Residency receipt", description: "How to verify residency on the wire — the checkable claim." },
-    { id: "how_to_transact", name: "The four surfaces", description: "Data, discovery, transaction, standards — which endpoint for what." },
-  ],
-  endpoints: { mcp: `https://${NODE}/mcp` },
-})));
+// Legacy /.well-known/agent.json (was a draft 0.3.0-shape card) — the current card is
+// A2A 1.0 at /.well-known/agent-card.json (NG-7 FIX item 4); one card, one address.
+app.get("/.well-known/agent.json", (req, res) => { ghostEighteen(res); res.redirect(308, "/.well-known/agent-card.json"); });
 
 // ARD capability manifest (doors-alive fix 2026-08-22): true ARD shape — specVersion + host + entries —
 // replacing the legacy beacon-style catalog the scanner rejected ("missing required specVersion").
@@ -308,7 +322,7 @@ app.get("/.well-known/ai-catalog.json", bc(() => ({
       type: "application/mcp-server+json",
       url: `https://${NODE}/mcp`,
       capabilities: TOOL_NAMES,
-      description: "The discovery surface of the GSC Carrier Fleet: 32,597 LIVE AI Agents (22,597 Carriers + 10,000 AIO Agents) across eighteen resident jurisdictions, resolved by fleet, jurisdiction and carrier over MCP (streamable-http). Operated by GreenCore Solutions Corp.",
+      description: "The discovery surface of the GSC AI Agent program: 32,597 LIVE AI Agents (22,597 Carriers + 10,000 AIO Agents) across eighteen resident jurisdictions, resolved by fleet, jurisdiction and carrier over MCP (streamable-http). AIO Agents resolve on mcp.gsc-marketplace.ai. Operated by GreenCore Solutions Corp.",
       representativeQueries: ["which GSC Carrier fleet serves Brazil", "resolve Carrier 0001 on the UK sovereign node", "how many GSC Carriers are live and where are they resident"],
     },
     {
